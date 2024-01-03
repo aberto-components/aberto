@@ -1,15 +1,16 @@
-import {LitElement, html} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import { LitElement, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
-@customElement('my-element')
-class MyElement extends LitElement {
+@customElement('aberto-calendar')
+class Calendar extends LitElement {
   override render() {
-    return html` <div>Hello from MyElement!</div> `;
+    return html`<div>Skjer det noe, eller shape det?</div>
+      <slot></slot> `;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement;
+    'aberto-calendar': Calendar;
   }
 }

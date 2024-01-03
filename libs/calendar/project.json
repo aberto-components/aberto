@@ -22,7 +22,16 @@
             "output": "."
           }
         ]
-      }
+      },
+      "configurations": {
+        "development": {
+          "watch": true
+        },
+        "production": {
+          "watch": false
+        }
+      },
+      "defaultConfiguration": "development"
     },
     "serve": {
       "executor": "nx:run-commands",
