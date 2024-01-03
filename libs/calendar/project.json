@@ -5,13 +5,30 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/calendar",
-        "main": "libs/calendar/src/index.ts",
         "tsConfig": "libs/calendar/tsconfig.lib.json",
-        "assets": ["libs/calendar/*.md"]
+        "project": "libs/calendar/package.json",
+        "main": "libs/calendar/src/index.ts",
+        "format": ["esm"],
+        "compiler": "tsc",
+        "rollupConfig": "libs/calendar/rollup.config.js",
+        "assets": [
+          {
+            "glob": "libs/calendar/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "wds --watch"
       }
     },
     "publish": {

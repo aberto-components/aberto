@@ -38,6 +38,15 @@
         "jest": true
       },
       "rules": {}
+    },
+    {
+      "files": ["*.mjs"],
+      "extends": ["plugin:@nx/javascript"],
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+      },
+      "rules": {}
     }
   ]
 }

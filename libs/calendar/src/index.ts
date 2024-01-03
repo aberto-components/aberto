@@ -1,9 +1,15 @@
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import {LitElement, html} from 'lit';
+import {customElement} from 'lit/decorators.js';
 
 @customElement('my-element')
 class MyElement extends LitElement {
-  render() {
+  override render() {
     return html` <div>Hello from MyElement!</div> `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'my-element': MyElement;
   }
 }
