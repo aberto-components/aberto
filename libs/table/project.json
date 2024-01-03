@@ -1,0 +1,27 @@
+{
+  "name": "Table",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/table/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/table",
+        "main": "libs/table/src/index.ts",
+        "tsConfig": "libs/table/tsconfig.lib.json",
+        "assets": ["libs/table/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs Table {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": []
+}
