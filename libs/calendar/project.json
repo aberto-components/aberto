@@ -1,0 +1,27 @@
+{
+  "name": "calendar",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/calendar/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/calendar",
+        "main": "libs/calendar/src/index.ts",
+        "tsConfig": "libs/calendar/tsconfig.lib.json",
+        "assets": ["libs/calendar/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs calendar {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": []
+}
