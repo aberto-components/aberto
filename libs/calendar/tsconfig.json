@@ -1,6 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {},
+  "compilerOptions": {
+    "paths": {
+      "@/components": ["libs/calendar/src/lib/components/index.ts"],
+      "@/mixins": ["libs/calendar/src/lib/mixins/index.ts"]
+    }
+  },
   "files": [],
   "include": [],
   "references": [

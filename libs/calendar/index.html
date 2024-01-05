@@ -7,6 +7,10 @@
     <script type="module" src="../../dist/libs/calendar/index.esm.js"></script>
   </head>
   <body>
-    <aberto-calendar></aberto-calendar>
+    <wc-calendar default-date="2024-01-01">
+      <wc-calendar-previous-month-button slot="toolbar-left">Prev</wc-calendar-previous-month-button>
+      <wc-calendar-next-month-button slot="toolbar-left">Next</wc-calendar-next-month-button>
+      <button slot="toolbar-right">month</button>
+    </wc-calendar>
   </body>
 </html>
