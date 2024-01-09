@@ -17,6 +17,7 @@
     "@nx/node": "^17.2.8",
     "@nx/rollup": "^17.2.8",
     "@nx/workspace": "17.2.8",
+    "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@swc-node/register": "~1.6.7",

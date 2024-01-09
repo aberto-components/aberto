@@ -1,17 +1,43 @@
 {
-  "name": "Table",
+  "name": "table",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/table/src",
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/table",
-        "main": "libs/table/src/index.ts",
         "tsConfig": "libs/table/tsconfig.lib.json",
-        "assets": ["libs/table/*.md"]
+        "project": "libs/table/package.json",
+        "main": "libs/table/src/index.ts",
+        "format": ["esm"],
+        "compiler": "tsc",
+        "rollupConfig": "libs/table/rollup.config.js",
+        "assets": [
+          {
+            "glob": "libs/table/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      },
+      "configurations": {
+        "development": {
+          "watch": true
+        },
+        "production": {
+          "watch": false
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "wds --watch"
       }
     },
     "publish": {
