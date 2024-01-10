@@ -53,6 +53,7 @@ class SvgIcon extends LitElement {
   }
 
   override render() {
+    console.log('hey here');
     if (!this.icon) {
       return html``;
     }

@@ -29,7 +29,8 @@
     "baseUrl": ".",
     "paths": {
       "@aberto/calendar": ["libs/calendar/src/index.ts"],
-      "@aberto/table": ["libs/table/src/index.ts"]
+      "@aberto/table": ["libs/table/src/index.ts"],
+      "@aberto/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

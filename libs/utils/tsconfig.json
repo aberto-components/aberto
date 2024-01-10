@@ -9,7 +9,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "files": [],
+  "files": ["./src/custom.d.ts"],
   "include": [],
   "references": [
     {
