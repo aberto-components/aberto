@@ -1,93 +1,86 @@
 import { LitElement, html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import {
-  eachDayOfInterval,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  subDays,
-  addDays,
-  endOfWeek,
-  getDay,
-  getDate,
-  format,
-  parseISO,
-  isValid,
-} from 'date-fns';
+import { customElement, property, state } from 'lit/decorators.js';
 
 import { calendarStyles } from './calendar-styles';
+import { CalendarUtils } from '@/utils';
+import { isValid, parseISO } from 'date-fns';
 
 @customElement('wc-calendar')
 class Calendar extends LitElement {
-  private headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  private currentDate = new Date();
-  private monthStart = startOfMonth(this.currentDate);
-  private monthEnd = endOfMonth(this.currentDate);
-  private allDaysInMonth = eachDayOfInterval({
-    start: this.monthStart,
-    end: this.monthEnd,
-  });
-  private daysFromPreviousMonth = this.getDaysFromPreviousMonth();
-  private daysFromNextMonth = this.getDaysFromNextMonth();
-  private allDays = [...this.daysFromPreviousMonth, ...this.allDaysInMonth, ...this.daysFromNextMonth];
+  private utils: CalendarUtils;
+  private headers: string[] = [];
 
   static override styles = [calendarStyles];
 
   @property({
-    type: String,
+    type: Date,
     attribute: 'default-date',
-    converter: (value) => {
-      if (value) {
-        const parsed = parseISO(value);
-        const valid = isValid(parsed);
-        if (!valid) {
-          console.warn("The provided default-date is not a valid date! Date needs to be in the format 'yyyy-MM-dd'");
+    converter: {
+      fromAttribute: (value) => {
+        if (value) {
+          const parsed = parseISO(value);
+          const valid = isValid(parsed);
+          if (!valid) {
+            console.warn("The provided default-date is not a valid date! Date needs to be in the format 'yyyy-MM-dd'");
+          }
+
+          return parsed;
         }
 
-        return parsed;
-      }
-
-      return value;
+        return value;
+      },
     },
   })
-  defaultDate = format(new Date(), 'yyyy-MM-dd');
+  defaultDate = new Date();
+
+  @state()
+  protected _currentDate: Date;
+
+  @state()
+  protected _daysInMonth: Date[] = [];
 
   constructor() {
     super();
+
+    this._currentDate = this.defaultDate;
+
+    this.utils = new CalendarUtils();
+    this.headers = this.utils.getHeadersForDaysInWeek();
+    this._daysInMonth = this.utils.getAllDaysInCalendarMonth(this._currentDate);
+
     this.addEventListener('click', this.handleCalendarButtonClick);
+  }
+
+  private gotoPreviousMonth() {
+    const previousMonthStart = this.utils.getPreviousMonthStart(this._currentDate);
+    this._currentDate = previousMonthStart;
+    this._daysInMonth = this.utils.getAllDaysInCalendarMonth(this._currentDate);
+  }
+
+  private gotoNextMonth() {
+    const nextMonthStart = this.utils.getNextMonthStart(this._currentDate);
+    this._currentDate = nextMonthStart;
+    this._daysInMonth = this.utils.getAllDaysInCalendarMonth(this._currentDate);
   }
 
   private handleCalendarButtonClick(event: Event) {
     const componentName = (event.target as Element).localName;
-    console.log('componentName', componentName);
-  }
-
-  private getDaysFromPreviousMonth() {
-    const dayOfWeek = getDay(this.monthStart);
-    if (dayOfWeek === 0) {
-      return [];
+    switch (componentName) {
+      case 'wc-calendar-previous-month-button': {
+        this.gotoPreviousMonth();
+        break;
+      }
+      case 'wc-calendar-next-month-button': {
+        this.gotoNextMonth();
+        break;
+      }
+      default: {
+        return;
+      }
     }
-
-    return eachDayOfInterval({
-      start: startOfWeek(this.monthStart),
-      end: subDays(this.monthStart, dayOfWeek),
-    });
-  }
-
-  private getDaysFromNextMonth() {
-    const dayOfWeek = getDay(this.monthEnd);
-    if (dayOfWeek === 7) {
-      return [];
-    }
-
-    return eachDayOfInterval({
-      start: addDays(this.monthEnd, 1),
-      end: endOfWeek(this.monthEnd),
-    });
   }
 
   override render() {
-    console.log('date', this.defaultDate);
     return html`
       <div class="calendar-wrapper">
         <section class="calendar-toolbar">
@@ -95,7 +88,7 @@ class Calendar extends LitElement {
             <slot name="toolbar-left"></slot>
           </div>
           <div class="calendar-toolbar-element center">
-            <h2>${format(this.currentDate, 'MMMM yyyy')}</h2>
+            <h2>${this.utils.format(this._currentDate, 'MMMM yyyy')}</h2>
           </div>
           <div class="calendar-toolbar-element right">
             <slot name="toolbar-right"></slot>
@@ -110,20 +103,20 @@ class Calendar extends LitElement {
             </thead>
             <tbody>
               <tr>
-                ${this.allDays.slice(0, 7).map((day) => html`<td>${getDate(day)}</td>`)}
+                ${this._daysInMonth.slice(0, 7).map((day) => html`<td>${this.utils.getDate(day)}</td>`)}
               </tr>
               <tr>
-                ${this.allDays.slice(7, 14).map((day) => html`<td>${getDate(day)}</td>`)}
+                ${this._daysInMonth.slice(7, 14).map((day) => html`<td>${this.utils.getDate(day)}</td>`)}
               </tr>
               <tr>
-                ${this.allDays.slice(14, 21).map((day) => html`<td>${getDate(day)}</td>`)}
+                ${this._daysInMonth.slice(14, 21).map((day) => html`<td>${this.utils.getDate(day)}</td>`)}
               </tr>
               <tr>
-                ${this.allDays.slice(21, 28).map((day) => html`<td>${getDate(day)}</td>`)}
+                ${this._daysInMonth.slice(21, 28).map((day) => html`<td>${this.utils.getDate(day)}</td>`)}
               </tr>
-              ${this.allDays.length > 29
+              ${this._daysInMonth.length > 29
                 ? html`<tr>
-                    ${this.allDays.slice(28, 35).map((day) => html`<td>${getDate(day)}</td>`)}
+                    ${this._daysInMonth.slice(28, 35).map((day) => html`<td>${this.utils.getDate(day)}</td>`)}
                   </tr>`
                 : nothing}
             </tbody>

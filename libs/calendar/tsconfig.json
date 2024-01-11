@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@/components": ["libs/calendar/src/lib/components/index.ts"],
-      "@/mixins": ["libs/calendar/src/lib/mixins/index.ts"]
+      "@/mixins": ["libs/calendar/src/lib/mixins/index.ts"],
+      "@/utils": ["libs/calendar/src/lib/utils/index.ts"]
     }
   },
   "files": [],
